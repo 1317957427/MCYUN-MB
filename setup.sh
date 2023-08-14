@@ -7,8 +7,8 @@ fi
 # 如果当前用户是 root 用户，则执行脚本的主体部分
 echo -e "\033[33m当前用户是 root 用户，开始执行 MCSManager 安装脚本。\033[0m"
 # Config
-mcsmanager_install_path="/opt/mcyun"
-mcsmanager_donwload_addr="https://github.com/1317957427/MCYUN-MB/releases/download/V1.0/MCYUN_linux.tar.gz"
+mcsmanager_install_path="/opt/mcsmanager"
+mcsmanager_donwload_addr="https://github.com/1317957427/MCYUN-MB/releases/download/V1.0/mcsmanager_linux_release.tar.gz"
 node="v14.19.1"
 zh=$(
     [[ $(locale -a) =~ "zh" ]] && echo 1
@@ -108,14 +108,14 @@ Install_MCSManager() {
 
   mkdir -p ${mcsmanager_install_path} || exit
 
-  # cd /opt/mcyun
+  # cd /opt/mcsmanager
   cd ${mcsmanager_install_path} || exit
 
 
   # donwload MCSManager release
   wget ${mcsmanager_donwload_addr}
-  tar -zxf MCYUN_linux.tar.gz -o
-  rm -rf "${mcsmanager_install_path}/MCYUN_linux.tar.gz"
+  tar -zxf mcsmanager_linux_release.tar.gz -o
+  rm -rf "${mcsmanager_install_path}/mcsmanager_linux_release.tar.gz"
   
   # echo "[→] cd daemon"
   cd daemon || exit
@@ -148,7 +148,7 @@ Create_Service() {
 Description=MCSManager Daemon
 
 [Service]
-WorkingDirectory=/opt/mcyun/daemon
+WorkingDirectory=/opt/mcsmanager/daemon
 ExecStart=${node_install_path}/bin/node app.js
 ExecReload=/bin/kill -s QUIT $MAINPID
 ExecStop=/bin/kill -s QUIT $MAINPID
@@ -163,7 +163,7 @@ WantedBy=multi-user.target
 Description=MCSManager Web
 
 [Service]
-WorkingDirectory=/opt/mcyun/web
+WorkingDirectory=/opt/mcsmanager/web
 ExecStart=${node_install_path}/bin/node app.js
 ExecReload=/bin/kill -s QUIT $MAINPID
 ExecStop=/bin/kill -s QUIT $MAINPID
