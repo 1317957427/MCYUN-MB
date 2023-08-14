@@ -7,7 +7,7 @@ fi
 # 如果当前用户是 root 用户，则执行脚本的主体部分
 echo -e "\033[33m当前用户是 root 用户，开始执行 MCSManager 安装脚本。\033[0m"
 # Config
-mcsmanager_install_path="/opt/mcsmanager"
+mcsmanager_install_path="/opt/mcyun"
 mcsmanager_donwload_addr="https://github.com/1317957427/MCYUN-MB/releases/download/untagged-a5c5ef90e7fb182a56a5/MCYUN_linux.tar.gz"
 node="v14.19.1"
 zh=$(
@@ -96,7 +96,7 @@ Install_Node() {
 
 
 Install_MCSManager() {
-  echo_cyan "[+] Install MCSManager..."
+  echo_cyan "[+] Install MCYUN..."
 
   # stop service
   systemctl stop mcsm-{web,daemon}
@@ -108,7 +108,7 @@ Install_MCSManager() {
 
   mkdir -p ${mcsmanager_install_path} || exit
 
-  # cd /opt/mcsmanager
+  # cd /opt/mcyun
   cd ${mcsmanager_install_path} || exit
 
 
@@ -120,13 +120,13 @@ Install_MCSManager() {
   # echo "[→] cd daemon"
   cd daemon || exit
 
-  echo_cyan "[+] Install MCSManager-Daemon dependencies..."
+  echo_cyan "[+] Install MCYUN-Daemon dependencies..."
   /usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm install  --registry=https://registry.npmmirror.com --production > npm_install_log
 
   # echo "[←] cd .."
   cd ../web || exit
 
-  echo_cyan "[+] Install MCSManager-Web dependencies..."
+  echo_cyan "[+] Install MCYUN-Web dependencies..."
   /usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm install  --registry=https://registry.npmmirror.com --production > npm_install_log
 
   echo
@@ -148,7 +148,7 @@ Create_Service() {
 Description=MCSManager Daemon
 
 [Service]
-WorkingDirectory=/opt/mcsmanager/daemon
+WorkingDirectory=/opt/mcyun/daemon
 ExecStart=${node_install_path}/bin/node app.js
 ExecReload=/bin/kill -s QUIT $MAINPID
 ExecStop=/bin/kill -s QUIT $MAINPID
@@ -163,7 +163,7 @@ WantedBy=multi-user.target
 Description=MCSManager Web
 
 [Service]
-WorkingDirectory=/opt/mcsmanager/web
+WorkingDirectory=/opt/mcyun/web
 ExecStart=${node_install_path}/bin/node app.js
 ExecReload=/bin/kill -s QUIT $MAINPID
 ExecStop=/bin/kill -s QUIT $MAINPID
@@ -182,7 +182,7 @@ WantedBy=multi-user.target
   printf "\n\n"
   echo_yellow "=================================================================="
   if [ "$zh" == 1 ]; then
-    echo_green "安装已完成！欢迎使用 MCSManager 面板！"
+    echo_green "安装已完成！欢迎使用 MC云 面板！"
     echo_yellow " "
     echo_cyan_n "控制面板地址：   "
     echo_yellow "http://你的公网IP:23333"
