@@ -1,9 +1,19 @@
 #!/bin/bash
-
+# 检查当前用户是否为 root 用户
+if [ $(id -u) -ne 0 ]; then
+    echo -e "\033[31m需要 root 权限执行此脚本，请使用 sudo 或者切换到 root 用户。\033[0m"
+    exit 1
+fi
+# 如果当前用户是 root 用户，则执行脚本的主体部分
+echo -e "\033[33m当前用户是 root 用户，开始执行 MCSManager 安装脚本。\033[0m"
 # Config
 mcsmanager_install_path="/opt/mcsmanager"
-mcsmanager_donwload_addr="https://github.com/1317957427/MCYUN-MB/"
+mcsmanager_donwload_addr="https://github.com/1317957427/MCYUN-MB/releases/download/untagged-a5c5ef90e7fb182a56a5/MCYUN_linux.tar.gz"
 node="v14.19.1"
+zh=$(
+    [[ $(locale -a) =~ "zh" ]] && echo 1
+    export LANG=zh_CN.UTF-8 || echo 0
+)
 
 error=""
 arch=$(uname -m)
@@ -32,12 +42,15 @@ echo_yellow() {
 
 # script info
 echo_cyan "+----------------------------------------------------------------------
-| MCSManager Installer
+| MC云 Installer
 +----------------------------------------------------------------------
-| Copyright © 2023 MCSManager.
+| Copyright © 2023 MC云.
 +----------------------------------------------------------------------
 | Contributors: Nuomiaa, CreeperKong, Unitwk, FunnyShadow
 +----------------------------------------------------------------------
+
+We will use servers in the China to speed up your installation!
+我们将使用国外地区的服务器来加速您的安装速度！
 "
 
 Red_Error() {
@@ -57,7 +70,7 @@ Install_Node() {
 
   rm -rf  node-"$node"-linux-"$arch".tar.gz
 
-  wget https://nodejs.org/dist/"$node"/node-"$node"-linux-"$arch".tar.gz
+  wget https://npmmirror.com/mirrors/node/"$node"/node-"$node"-linux-"$arch".tar.gz
 
   tar -zxf node-"$node"-linux-"$arch".tar.gz
 
@@ -101,34 +114,34 @@ Install_MCSManager() {
 
   # donwload MCSManager release
   wget ${mcsmanager_donwload_addr}
-  tar -zxf mcsmanager_linux_release.tar.gz -o
-  rm -rf "${mcsmanager_install_path}/mcsmanager_linux_release.tar.gz"
+  tar -zxf MCYUN_linux.tar.gz -o
+  rm -rf "${mcsmanager_install_path}/MCYUN_linux.tar.gz"
   
   # echo "[→] cd daemon"
   cd daemon || exit
 
   echo_cyan "[+] Install MCSManager-Daemon dependencies..."
-  /usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm install --production > npm_install_log
+  /usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm install  --registry=https://registry.npmmirror.com --production > npm_install_log
 
   # echo "[←] cd .."
   cd ../web || exit
 
   echo_cyan "[+] Install MCSManager-Web dependencies..."
-  /usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm install --production > npm_install_log
+  /usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm install  --registry=https://registry.npmmirror.com --production > npm_install_log
 
   echo
-  echo_yellow "=============== MCSManager ==============="
+  echo_yellow "=============== MC云 ==============="
   echo_green " Daemon: ${mcsmanager_install_path}/daemon"
   echo_green " Web: ${mcsmanager_install_path}/web"
-  echo_yellow "=============== MCSManager ==============="
+  echo_yellow "=============== MC云 ==============="
   echo
-  echo_green "[+] MCSManager installation success!"
+  echo_green "[+] MCYUN installation success!"
 
   sleep 3
 }
 
 Create_Service() {
-  echo_cyan "[+] Create MCSManager service..."
+  echo_cyan "[+] Create MCYUN service..."
 
   echo "
 [Unit]
@@ -167,9 +180,24 @@ WantedBy=multi-user.target
   sleep 3
 
   printf "\n\n"
-
   echo_yellow "=================================================================="
-  echo_green "Installation is complete! Welcome to the MCSManager panel !!!"
+  if [ "$zh" == 1 ]; then
+    echo_green "安装已完成！欢迎使用 MCSManager 面板！"
+    echo_yellow " "
+    echo_cyan_n "控制面板地址：   "
+    echo_yellow "http://你的公网IP:23333"
+    echo_red "你必须开放 23333（面板）和 24444（守护进程用）端口，控制面板需要这两个端口才能正常工作。"
+    echo_yellow " "
+    echo_cyan "下面是常用的几个命令："
+    echo_cyan "启动面板 systemctl start mcsm-{daemon,web}.service"
+    echo_cyan "停止面板 systemctl stop mcsm-{daemon,web}.service"
+    echo_cyan "重启面板 systemctl restart mcsm-{daemon,web}.service"
+    echo_yellow " "
+    echo_cyan "官方文档（必读）：https://www.mcwzsc.shop/"
+    echo_yellow "=================================================================="
+  else
+    echo_yellow "=================================================================="
+    echo_green "Installation is complete! Welcome to the MCYUN panel!"
     echo_yellow " "
     echo_cyan_n "HTTP Web Service:        "; echo_yellow "http://<Your IP>:23333"
     echo_cyan_n "Daemon Address:          "; echo_yellow "ws://<Your IP>:24444"
@@ -180,8 +208,9 @@ WantedBy=multi-user.target
     echo_cyan "systemctl stop mcsm-{daemon,web}.service"
     echo_cyan "systemctl restart mcsm-{daemon,web}.service"
     echo_yellow " "
-    echo_green "Official Document: https://docs.mcsmanager.com/"
+    echo_green "Official Document: https://www.mcwzsc.shop/"
     echo_yellow "=================================================================="
+  fi
 }
 
 
