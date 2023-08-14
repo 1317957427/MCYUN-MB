@@ -49,8 +49,8 @@ echo_cyan "+--------------------------------------------------------------------
 | Contributors: Nuomiaa, CreeperKong, Unitwk, FunnyShadow
 +----------------------------------------------------------------------
 
-We will use servers in the China to speed up your installation!
-我们将使用国外地区的服务器来加速您的安装速度！
+We will use servers in the USA to speed up your installation!
+我们将使用美国地区的服务器来加速您的安装速度！
 "
 
 Red_Error() {
@@ -62,7 +62,7 @@ Red_Error() {
 
 
 Install_Node() {
-  echo_cyan_n "[+] Install Node.JS environment... "
+  echo_cyan_n "[+] 正在安装 Node.JS... "
 
   rm -irf "$node_install_path"
 
@@ -81,14 +81,14 @@ Install_Node() {
     echo_green "Success"
   else
     echo_red "Failed"
-    Red_Error "[x] Node installation failed!"
+    Red_Error "[x] Node 安装失败!"
   fi
 
   echo
-  echo_yellow "=============== Node.JS Version ==============="
+  echo_yellow "=============== 欢迎使用 Node.JS ==============="
   echo_yellow " node: $("$node_install_path"/bin/node -v)"
   echo_yellow " npm: v$(/usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm -v)"
-  echo_yellow "=============== Node.JS Version ==============="
+  echo_yellow "=============== 安装成功 Node.JS ==============="
   echo
 
   sleep 3
@@ -96,7 +96,7 @@ Install_Node() {
 
 
 Install_MCSManager() {
-  echo_cyan "[+] Install MCYUN..."
+  echo_cyan "[+] 正在安装 MC云面板..."
 
   # stop service
   systemctl stop mcsm-{web,daemon}
@@ -120,28 +120,28 @@ Install_MCSManager() {
   # echo "[→] cd daemon"
   cd daemon || exit
 
-  echo_cyan "[+] Install MCYUN-Daemon dependencies..."
+  echo_cyan "[+] 正在安装 MC云-守护程序..."
   /usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm install  --registry=https://registry.npmmirror.com --production > npm_install_log
 
   # echo "[←] cd .."
   cd ../web || exit
 
-  echo_cyan "[+] Install MCYUN-Web dependencies..."
+  echo_cyan "[+] 正在安装 MC云-网页面板..."
   /usr/bin/env "$node_install_path"/bin/node "$node_install_path"/bin/npm install  --registry=https://registry.npmmirror.com --production > npm_install_log
 
   echo
-  echo_yellow "=============== MC云 ==============="
+  echo_yellow "=============== 欢迎使用 MC云 面板 ==============="
   echo_green " Daemon: ${mcsmanager_install_path}/daemon"
   echo_green " Web: ${mcsmanager_install_path}/web"
-  echo_yellow "=============== MC云 ==============="
+  echo_yellow "=============== 安装成功 MC云 面板 ==============="
   echo
-  echo_green "[+] MCYUN installation success!"
+  echo_green "[+] MC云-面板 安装成功!"
 
   sleep 3
 }
 
 Create_Service() {
-  echo_cyan "[+] Create MCYUN service..."
+  echo_cyan "[+] 创建 MC云 服务成功..."
 
   echo "
 [Unit]
@@ -232,8 +232,8 @@ elif [ $arch == s390x ]; then
   arch=s390x
   #echo "[-] IBM LinuxONE architecture detected"
 else
-  Red_Error "[x] Sorry, this architecture is not supported yet!"
-  Red_Error "[x] Please try to install manually: https://github.com/MCSManager/MCSManager#linux"
+  Red_Error "[x] 安装失败,安装失败,不知道为什么,阿巴阿巴!"
+  Red_Error "[x] 安装失败试试手动安装吧: https://github.com/1317957427/MCYUN-MB"
   exit
 fi
 
@@ -241,10 +241,10 @@ fi
 node_install_path="/opt/node-$node-linux-$arch"
 
 # Check network connection
-echo_cyan "[-] Architecture: $arch"
+echo_cyan "[-] 网络问题,网络问题请换一个网络试试看: $arch"
 
 # Install related software
-echo_cyan_n "[+] Installing dependent software(git,tar)... "
+echo_cyan_n "[+] 正在安装依赖库(git,tar)... "
 if [ -x "$(command -v yum)" ]; then yum install -y git tar > error;
 elif [ -x "$(command -v apt-get)" ]; then apt-get install -y git tar > error;
 elif [ -x "$(command -v pacman)" ]; then pacman -Syu --noconfirm git tar > error;
@@ -258,7 +258,7 @@ if [[ -x "$(command -v git)" && -x "$(command -v tar)" ]]
   else
     echo_red "Failed"
     echo "$error"
-    Red_Error "[x] Related software installation failed, please install git and tar packages manually!"
+    Red_Error "[x] 安装失败,请手动安装 git 和 tar 就可以了!"
     exit
 fi
 
