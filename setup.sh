@@ -8,7 +8,7 @@ fi
 echo -e "\033[33m当前用户是 root 用户，开始执行 MCSManager 安装脚本。\033[0m"
 # Config
 mcsmanager_install_path="/opt/mcyun"
-mcsmanager_donwload_addr="https://github.com/1317957427/MCYUN-MB/releases/download/untagged-a5c5ef90e7fb182a56a5/MCYUN_linux.tar.gz"
+mcsmanager_donwload_addr="https://github.com/1317957427/MCYUN-MB/releases/download/V1.0/MCYUN_linux.tar.gz"
 node="v14.19.1"
 zh=$(
     [[ $(locale -a) =~ "zh" ]] && echo 1
